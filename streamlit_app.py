@@ -14,7 +14,6 @@ def save_scaler():
     st.success("Scaler saved successfully!")
 
 # Fungsi untuk memuat scaler
-@st.cache
 def load_scaler():
     scaler = None
     error_message = None
