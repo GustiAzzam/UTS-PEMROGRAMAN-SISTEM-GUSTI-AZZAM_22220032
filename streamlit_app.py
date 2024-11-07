@@ -2,12 +2,17 @@ import streamlit as st
 import numpy as np
 import pickle
 from sklearn.preprocessing import MinMaxScaler
+import os
 
 # Fungsi untuk menyimpan scaler
 def save_scaler():
     data = np.array([[1, 2], [2, 3], [3, 4], [4, 5]])  # Contoh data
     scaler = MinMaxScaler()
     scaler.fit(data)
+
+    # Pastikan direktori ada
+    if not os.path.exists('/workspaces/blank-app/'):
+        os.makedirs('/workspaces/blank-app/')
 
     with open('/workspaces/blank-app/scaler.pkl', 'wb') as scaler_file:
         pickle.dump(scaler, scaler_file)
