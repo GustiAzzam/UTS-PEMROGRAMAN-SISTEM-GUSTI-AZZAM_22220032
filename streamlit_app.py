@@ -6,8 +6,7 @@ from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import load_model
 
 # Fungsi untuk memuat model
-@st.cache_rpip install --upgrade keras
-esource
+@st.cache_resource
 def load_models():
     lstm_model = load_model('/workspaces/blank-app/lstm_model.h5')
     with open('/workspaces/blank-app/svm_classifier.pkl', 'rb') as svm_file:
