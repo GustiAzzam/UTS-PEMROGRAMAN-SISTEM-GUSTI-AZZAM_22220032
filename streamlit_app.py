@@ -8,15 +8,34 @@ from tensorflow.keras.models import load_model
 # Fungsi untuk memuat model
 @st.cache  # Ganti @st.cache_resource dengan @st.cache
 def load_models():
-    lstm_model = load_model('/workspaces/blank-app/lstm_model.h5')
-    with open('/workspaces/blank-app/svm_classifier.pkl', 'rb') as svm_file:  # Tambahkan 'rb' untuk membuka file biner
-        svm_classifier = pickle.load(svm_file)
-    with open('/workspaces/blank-app/scaler.pkl', 'rb') as scaler_file:  # Tambahkan 'rb' untuk membuka file biner
-        scaler = pickle.load(scaler_file)
+    try:
+        lstm_model = load_model('/workspaces/blank-app/lstm_model.h5')
+    except OSError as e:
+        st.error(f"Error loading LSTM model: {e}")
+        return None, None, None
+
+    try:
+        with open('/workspaces/blank-app/svm_classifier.pkl', 'rb') as svm_file:  # Tambahkan 'rb' untuk membuka file biner
+            svm_classifier = pickle.load(svm_file)
+    except Exception as e:
+        st.error(f"Error loading SVM classifier: {e}")
+        return lstm_model, None, None
+
+    try:
+        with open('/workspaces/blank-app/scaler.pkl', 'rb') as scaler_file:  # Tambahkan 'rb' untuk membuka file biner
+            scaler = pickle.load(scaler_file)
+    except Exception as e:
+        st.error(f"Error loading scaler: {e}")
+        return lstm_model, svm_classifier, None
+
     return lstm_model, svm_classifier, scaler
 
 # Memuat model LSTM, SVM, dan Scaler
 lstm_model, svm_classifier, scaler = load_models()
+
+# Jika model tidak berhasil dimuat, hentikan eksekusi lebih lanjut
+if lstm_model is None or svm_classifier is None or scaler is None:
+    st.stop()
 
 # Judul aplikasi
 st.title("Aplikasi Prediksi Intrusi Jaringan")
