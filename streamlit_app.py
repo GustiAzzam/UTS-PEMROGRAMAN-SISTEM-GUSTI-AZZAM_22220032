@@ -9,9 +9,9 @@ from tensorflow.keras.models import load_model
 @st.cache  # Ganti @st.cache_resource dengan @st.cache
 def load_models():
     lstm_model = load_model('/workspaces/blank-app/lstm_model.h5')
-    with open('/workspaces/blank-app/svm_classifier.pkl') as svm_file:
+    with open('/workspaces/blank-app/svm_classifier.pkl', 'rb') as svm_file:  # Tambahkan 'rb' untuk membuka file biner
         svm_classifier = pickle.load(svm_file)
-    with open('/workspaces/blank-app/scaler.pkl') as scaler_file:
+    with open('/workspaces/blank-app/scaler.pkl', 'rb') as scaler_file:  # Tambahkan 'rb' untuk membuka file biner
         scaler = pickle.load(scaler_file)
     return lstm_model, svm_classifier, scaler
 
@@ -56,3 +56,7 @@ if st.button("Prediksi"):
         st.write("Hasil Prediksi: Potensi Intrusi Teridentifikasi")
     else:
         st.write("Hasil Prediksi: Tidak Ada Potensi Intrusi")
+
+# Membersihkan cache jika diperlukan
+if st.button("Bersihkan Cache"):
+    st.cache_resource.clear()
