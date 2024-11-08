@@ -35,7 +35,7 @@ def load_models():
     error_message = None
 
     # Cek keberadaan file model LSTM
-    lstm_model_path = '/workspaces/blank-app/lstm_model.h5'
+    lstm_model_path = 'lstm_model.h5'
     if not os.path.exists(lstm_model_path):
         error_message = f"LSTM model file not found at {lstm_model_path}"
         return lstm_model, svm_classifier, scaler, error_message
@@ -46,7 +46,7 @@ def load_models():
         error_message = f"Error loading LSTM model: {e}"
     
     # Cek keberadaan file SVM
-    svm_model_path = '/workspaces/blank-app/svm_classifier.pkl'
+    svm_model_path = 'svm_classifier.pkl'
     if not os.path.exists(svm_model_path):
         error_message = f"SVM model file not found at {svm_model_path}"
         return lstm_model, svm_classifier, scaler, error_message
