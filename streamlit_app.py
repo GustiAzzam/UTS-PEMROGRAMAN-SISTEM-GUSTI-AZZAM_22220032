@@ -19,7 +19,6 @@ def save_scaler(data):
     # Simpan scaler
     with open(scaler_path, 'wb') as scaler_file:
         pickle.dump(scaler, scaler_file)
-    st.success("Scaler saved successfully!")
 
     return scaler_path  # Kembalikan jalur scaler yang disimpan
 
@@ -55,6 +54,9 @@ def load_models():
 # Menyimpan scaler jika diperlukan (gunakan data Anda sendiri untuk fit scaler)
 data = np.random.rand(100, 6)  # Contoh data, ganti dengan data aktual Anda
 scaler_path = save_scaler(data)
+
+# Tampilkan pesan sukses setelah menyimpan scaler
+st.success("Scaler saved successfully!")
 
 # Memuat model LSTM, SVM, dan Scaler
 lstm_model, svm_classifier, scaler, error_message = load_models()
@@ -92,13 +94,4 @@ if st.button("Prediksi"):
     input_lstm = input_scaled.reshape((input_scaled.shape[0], 1, input_scaled.shape[1]))
 
     # Ekstrak fitur menggunakan model LSTM
-    lstm_features = lstm_model.predict(input_lstm)
-
-    # Prediksi menggunakan model SVM
-    prediction = svm_classifier.predict(lstm_features)
-
-    # Tampilkan hasil prediksi
-    if prediction[0] == 1:
-        st.write("Hasil Prediksi: Potensi Intrusi Teridentifikasi")
-    else:
-        st.write("Hasil Prediksi: Tidak Ada Potensi Intrusi")
+    lstm
