@@ -2,12 +2,12 @@ import os
 import streamlit as st
 import pickle
 import numpy as np
-from tensorflow.keras.models import load_model
+import tensorflow as tf
 from sklearn.preprocessing import MinMaxScaler
 import tempfile
 
 # Fungsi untuk menyimpan scaler
-@st.cache
+@st.cache_resource
 def save_scaler(data):
     scaler = MinMaxScaler()
     scaler.fit(data)
@@ -27,7 +27,7 @@ def save_scaler(data):
     return scaler_path  # Kembalikan jalur scaler yang disimpan
 
 # Fungsi untuk memuat model LSTM, SVM, dan Scaler
-@st.cache
+@st.cache_resource
 def load_models():
     lstm_model = None
     svm_classifier = None
@@ -35,18 +35,18 @@ def load_models():
     error_message = None
 
     # Cek keberadaan file model LSTM
-    lstm_model_path = 'lstm_model.h5'
+    lstm_model_path = '/workspaces/blank-app/lstm_model'  # Pastikan ini adalah direktori model
     if not os.path.exists(lstm_model_path):
-        error_message = f"LSTM model file not found at {lstm_model_path}"
+        error_message = f"LSTM model directory not found at {lstm_model_path}"
         return lstm_model, svm_classifier, scaler, error_message
 
     try:
-        lstm_model = load_model(lstm_model_path)
+        lstm_model = tf.keras.models.load_model(lstm_model_path)
     except Exception as e:
         error_message = f"Error loading LSTM model: {e}"
     
     # Cek keberadaan file SVM
-    svm_model_path = 'svm_classifier.pkl'
+    svm_model_path = '/workspaces/blank-app/svm_classifier.pkl'
     if not os.path.exists(svm_model_path):
         error_message = f"SVM model file not found at {svm_model_path}"
         return lstm_model, svm_classifier, scaler, error_message
@@ -108,5 +108,4 @@ input_data = np.array([[ts, src_port, dst_port, duration, src_bytes, dst_bytes]]
 
 # Tombol prediksi
 if st.button("Prediksi"):
-    # Skala input menggunakan scaler yang sudah dilatih
-    input_scaled = scaler.transform(input_data)
+    # Skala input menggunakan
