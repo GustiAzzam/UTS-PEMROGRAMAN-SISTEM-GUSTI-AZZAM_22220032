@@ -1,11 +1,26 @@
+import os
 import streamlit as st
 import pickle
 import numpy as np
 from tensorflow.keras.models import load_model
-from sklearn.svm import SVC
+from sklearn.preprocessing import MinMaxScaler
 
-# Fungsi untuk memuat model LSTM dan SVM
-@st.cache_resource
+# Fungsi untuk menyimpan scaler
+@st.cache
+def save_scaler(data):
+    scaler = MinMaxScaler()
+    scaler.fit(data)
+
+    # Pastikan direktori ada, jika tidak buat direktori tersebut
+    os.makedirs('/workspaces/blank-app/', exist_ok=True)
+
+    # Simpan scaler
+    with open('/workspaces/blank-app/scaler.pkl', 'wb') as scaler_file:
+        pickle.dump(scaler, scaler_file)
+    st.success("Scaler saved successfully!")
+
+# Fungsi untuk memuat model LSTM, SVM, dan Scaler
+@st.cache
 def load_models():
     lstm_model = None
     svm_classifier = None
@@ -30,6 +45,10 @@ def load_models():
         error_message = f"Error loading scaler: {e}"
 
     return lstm_model, svm_classifier, scaler, error_message
+
+# Menyimpan scaler jika diperlukan (gunakan data Anda sendiri untuk fit scaler)
+data = np.random.rand(100, 6)  # Contoh data, ganti dengan data aktual Anda
+save_scaler(data)
 
 # Memuat model LSTM, SVM, dan Scaler
 lstm_model, svm_classifier, scaler, error_message = load_models()
