@@ -108,7 +108,6 @@ input_data = np.array([[ts, src_port, dst_port, duration, src_bytes, dst_bytes]]
 
 #Tombol prediksi
 if st.button("Prediksi"):
-    #Skala input menggunakan scaler yang telah dimuat
     if scaler:
         try:
             input_data_scaled = scaler.transform(input_data)
