@@ -110,20 +110,34 @@ input_data = np.array([[ts, src_port, dst_port, duration, src_bytes, dst_bytes]]
 if st.button("Prediksi"):
     # Skala input menggunakan scaler yang telah dimuat
     if scaler:
-        input_data_scaled = scaler.transform(input_data)
+        try:
+            input_data_scaled = scaler.transform(input_data)
+        except Exception as e:
+            st.error(f"Error scaling input data: {e}")
+            st.stop()
     else:
         st.error("Scaler tidak tersedia!")
         st.stop()
-    
-    # Prediksi menggunakan model LSTM dan SVM
+
+    # Prediksi menggunakan model LSTM
     if lstm_model:
-        lstm_prediction = lstm_model.predict(input_data_scaled)
-        st.write("Prediksi LSTM:", lstm_prediction)
+        try:
+            # LSTM biasanya membutuhkan input dengan dimensi (samples, timesteps, features)
+            input_data_scaled = input_data_scaled.reshape((input_data_scaled.shape[0], 1, input_data_scaled.shape[1]))
+            lstm_prediction = lstm_model.predict(input_data_scaled)
+            st.write("Prediksi LSTM:", lstm_prediction)
+        except Exception as e:
+            st.error(f"Error predicting with LSTM model: {e}")
+    
     else:
         st.error("Model LSTM tidak tersedia!")
     
+    # Prediksi menggunakan model SVM
     if svm_classifier:
-        svm_prediction = svm_classifier.predict(input_data_scaled)
-        st.write("Prediksi SVM:", svm_prediction)
+        try:
+            svm_prediction = svm_classifier.predict(input_data_scaled)
+            st.write("Prediksi SVM:", svm_prediction)
+        except Exception as e:
+            st.error(f"Error predicting with SVM model: {e}")
     else:
         st.error("Model SVM tidak tersedia!")
