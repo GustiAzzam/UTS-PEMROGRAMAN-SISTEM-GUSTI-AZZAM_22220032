@@ -4,6 +4,7 @@ import pickle
 import numpy as np
 from tensorflow.keras.models import load_model
 from sklearn.preprocessing import MinMaxScaler
+import tempfile
 
 # Fungsi untuk menyimpan scaler
 @st.cache
@@ -11,13 +12,16 @@ def save_scaler(data):
     scaler = MinMaxScaler()
     scaler.fit(data)
 
-    # Pastikan direktori ada, jika tidak buat direktori tersebut
-    os.makedirs('/workspaces/blank-app/', exist_ok=True)
+    # Menggunakan direktori sementara
+    temp_dir = tempfile.gettempdir()
+    scaler_path = os.path.join(temp_dir, 'scaler.pkl')
 
     # Simpan scaler
-    with open('/workspaces/blank-app/scaler.pkl', 'wb') as scaler_file:
+    with open(scaler_path, 'wb') as scaler_file:
         pickle.dump(scaler, scaler_file)
     st.success("Scaler saved successfully!")
+
+    return scaler_path  # Kembalikan jalur scaler yang disimpan
 
 # Fungsi untuk memuat model LSTM, SVM, dan Scaler
 @st.cache
@@ -39,7 +43,9 @@ def load_models():
         error_message = f"Error loading SVM model: {e}"
     
     try:
-        with open('/workspaces/blank-app/scaler.pkl', 'rb') as scaler_file:
+        # Memuat scaler dari jalur sementara
+        scaler_path = os.path.join(tempfile.gettempdir(), 'scaler.pkl')
+        with open(scaler_path, 'rb') as scaler_file:
             scaler = pickle.load(scaler_file)
     except FileNotFoundError as e:
         error_message = f"Error loading scaler: {e}"
@@ -48,7 +54,7 @@ def load_models():
 
 # Menyimpan scaler jika diperlukan (gunakan data Anda sendiri untuk fit scaler)
 data = np.random.rand(100, 6)  # Contoh data, ganti dengan data aktual Anda
-save_scaler(data)
+scaler_path = save_scaler(data)
 
 # Memuat model LSTM, SVM, dan Scaler
 lstm_model, svm_classifier, scaler, error_message = load_models()
