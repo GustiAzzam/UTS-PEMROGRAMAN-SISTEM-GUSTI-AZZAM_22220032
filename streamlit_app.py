@@ -106,9 +106,9 @@ label = st.selectbox("Label", [0, 1])  # Kategori label dalam dataset
 # Menggabungkan input menjadi array sesuai fitur dalam dataset Anda
 input_data = np.array([[ts, src_port, dst_port, duration, src_bytes, dst_bytes]])
 
-# Tombol prediksi
+#Tombol prediksi
 if st.button("Prediksi"):
-    # Skala input menggunakan scaler yang telah dimuat
+    #Skala input menggunakan scaler yang telah dimuat
     if scaler:
         try:
             input_data_scaled = scaler.transform(input_data)
