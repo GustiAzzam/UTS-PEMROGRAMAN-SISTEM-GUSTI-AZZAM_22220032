@@ -108,4 +108,22 @@ input_data = np.array([[ts, src_port, dst_port, duration, src_bytes, dst_bytes]]
 
 # Tombol prediksi
 if st.button("Prediksi"):
-    # Skala input menggunakan
+    # Skala input menggunakan scaler yang telah dimuat
+    if scaler:
+        input_data_scaled = scaler.transform(input_data)
+    else:
+        st.error("Scaler tidak tersedia!")
+        st.stop()
+    
+    # Prediksi menggunakan model LSTM dan SVM
+    if lstm_model:
+        lstm_prediction = lstm_model.predict(input_data_scaled)
+        st.write("Prediksi LSTM:", lstm_prediction)
+    else:
+        st.error("Model LSTM tidak tersedia!")
+    
+    if svm_classifier:
+        svm_prediction = svm_classifier.predict(input_data_scaled)
+        st.write("Prediksi SVM:", svm_prediction)
+    else:
+        st.error("Model SVM tidak tersedia!")
