@@ -10,7 +10,7 @@ from tensorflow.keras.models import load_model
 @st.cache_resource
 def load_models():
     lstm_model = load_model('lstm_model.h5')
-    with open('svm_model.pkl', 'rb') as svm_file:
+    with open('svm_classifier.pkl', 'rb') as svm_file:
         svm_classifier = pickle.load(svm_file)
     with open('scaler.pkl', 'rb') as scaler_file:
         scaler = pickle.load(scaler_file)
